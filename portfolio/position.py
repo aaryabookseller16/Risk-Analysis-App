@@ -26,7 +26,6 @@ class Position:
         self.portfolio_value = portfolio_value
         self.end_date = end_date
 
-        
         # Fetch price data on the purchase date
         price_df = fetch_stock_price(ticker=ticker, start=purchase_date, end= end_date)
 
@@ -55,7 +54,7 @@ class Position:
         Returns:
             float: Value of this position on that day.
         """
-        df = fetch_stock_price(ticker=self.ticker, start=date, end = self.end_date)
+        df = fetch_stock_price(ticker=self.ticker, start=date, end = self.end_date) #call fetch stock price for that particular time and date
 
         if df.empty:
             logging.warning(f"No price data for {self.ticker} on {date}")

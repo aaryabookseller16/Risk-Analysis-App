@@ -1,8 +1,10 @@
 import yfinance as yf
 import pandas as pd
 import logging
-from pathlib import Path
 import os
+
+from pathlib import Path
+from datetime import datetime, timedelta
 
 def fetch_stock_price(ticker: str, start: str, end: str = None, save_path: str = "data/raw") -> pd.DataFrame:
     """
