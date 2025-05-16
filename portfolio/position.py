@@ -1,5 +1,6 @@
 from data.fetcher import fetch_stock_price
 import logging
+from datetime import datetime, timedelta
 
 class Position:
     """
@@ -35,6 +36,9 @@ class Position:
 
         # Use the first available price (there should only be one)
         self.purchase_price = price_df.iloc[0].item()
+        
+        # Price of the share on selling date
+        self.sell_price = price_df.iloc[-1].item()
 
         # Calculate how many shares were bought = (allocation % * total value) / price per share
         self._shares = (allocation_pct * portfolio_value) / self.purchase_price
@@ -54,8 +58,21 @@ class Position:
         Returns:
             float: Value of this position on that day.
         """
-        df = fetch_stock_price(ticker=self.ticker, start=date, end = self.end_date) #call fetch stock price for that particular time and date
+        # Original date string
+        start_date = date
 
+        # Convert to datetime object
+        start_dt = datetime.strptime(start_date, "%Y-%m-%d")
+
+        # Add one day
+        end_dt = start_dt + timedelta(days=1)
+
+        # Convert back to string
+        end_date = end_dt.strftime("%Y-%m-%d")
+        
+
+        df = fetch_stock_price(ticker=self.ticker, start=date, end = end_date) #call fetch stock price for that particular time and date
+        
         if df.empty:
             logging.warning(f"No price data for {self.ticker} on {date}")
             return 0.0
